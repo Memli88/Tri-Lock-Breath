@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#0b0e14">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tri-Lock">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/vazirmatn@33.0.3/Vazirmatn-font-face.css">
+<title>Tri-Lock Breath</title>
+<style>
+:root{--bg:#0b0e14;--card:#141925;--tx:#e8ecf4;--mut:#8b94a7;--ln:#4a5570;--ac:#8f7bff}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font-family:Vazirmatn,system-ui,sans-serif;overscroll-behavior:none}
+body{min-height:100vh;padding:env(safe-area-inset-top) 14px calc(env(safe-area-inset-bottom) + 14px);display:flex;flex-direction:column;align-items:center;gap:10px}
+h1{font-size:17px;margin:12px 0 0;font-weight:600}
+.sub{font-size:11px;color:var(--mut);margin-top:-6px}
+#stages{display:flex;gap:6px;width:100%;max-width:360px}
+#stages div{flex:1;text-align:center;font-size:11px;padding:5px 0;border-radius:8px;background:var(--card);color:var(--mut);transition:.25s}
+#stages .on{background:var(--ac);color:#fff}
+#stage{position:relative;width:min(80vw,310px);aspect-ratio:300/400}
+#body{position:absolute;inset:0;width:100%;height:100%}
+#circle{position:absolute;left:50%;top:50%;margin:-39% 0 0 -39%;width:78%;aspect-ratio:1;border-radius:50%;
+ background:radial-gradient(circle,rgba(143,123,255,.35),rgba(60,200,220,.12) 65%,transparent 72%);
+ border:2px solid rgba(143,123,255,.7);box-shadow:0 0 30px rgba(143,123,255,.35);transform:scale(.55);will-change:transform;}
+#txt{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;pointer-events:none;text-shadow:0 1px 8px #000}
+#ph{font-size:26px;font-weight:700}#ct{font-size:14px;color:#cfd6e6}
+#hint{min-height:36px;text-align:center;font-size:13px;color:#cfd6e6;max-width:340px}
+.z{fill:var(--c);opacity:0;transition:opacity .12s,filter .12s}
+.on1{opacity:.35}.on2{opacity:.9;filter:drop-shadow(0 0 8px var(--c))}.on3{opacity:1;filter:drop-shadow(0 0 14px var(--c))}
+#dot{fill:#fff;opacity:0;filter:drop-shadow(0 0 8px #fff);transition:opacity .3s}
+text.l{fill:var(--mut);font-size:11px;font-family:Vazirmatn,sans-serif}
+#chips{display:flex;gap:6px;width:100%;max-width:360px}
+.chip{flex:1;border:1px solid #2a3248;border-radius:12px;padding:7px 4px;text-align:center;background:var(--card);transition:.15s}
+.chip b{display:block;font-size:12px}.chip small{font-size:10px;color:var(--mut)}.chip i{display:block;font-style:normal;font-size:11px;margin-top:2px;color:var(--mut)}
+.chip.on1{border-color:var(--c)}.chip.on2{border-color:var(--c);background:color-mix(in srgb,var(--c) 22%,var(--card))}
+.chip.on3{border-color:var(--c);background:color-mix(in srgb,var(--c) 38%,var(--card))}
+.chip.on1 i,.chip.on2 i,.chip.on3 i{color:#fff}
+#set{display:flex;gap:10px;font-size:12px;color:var(--mut);align-items:center}
+select{background:var(--card);color:var(--tx);border:1px solid #2a3248;border-radius:8px;padding:5px;font:inherit}
+#btns{display:flex;gap:8px;width:100%;max-width:360px}
+button{flex:1;font:inherit;font-size:15px;border:0;border-radius:14px;padding:13px;background:var(--ac);color:#fff;font-weight:600}
+button.g{background:var(--card);color:var(--tx)}button[hidden]{display:none}
+.note{font-size:11px;line-height:1.7;color:var(--mut);max-width:360px;text-align:justify}
+.note b{color:#ffb3a1}
+body{position:relative;overflow-x:hidden}
+#body{direction:ltr}
+#lg{position:absolute;top:calc(env(safe-area-inset-top) + 10px);left:14px;flex:none;width:auto;padding:5px 12px;font-size:12px;border-radius:10px;z-index:5}
+#stages div{position:relative;overflow:hidden}
+#stages div::after{content:"";position:absolute;bottom:0;inset-inline-start:0;height:3px;width:var(--p,0%);background:#fff;opacity:.85}
+#tot{width:100%;max-width:360px;height:5px;background:var(--card);border-radius:4px;overflow:hidden}
+#bar{height:100%;width:0;background:linear-gradient(90deg,#ff7a59,#ffc247,#5cc8ff,#8f7bff)}
+#tt{direction:ltr;font-size:11px;color:var(--mut);margin-top:-4px}
+#psw{position:absolute;left:50%;top:17.5%;width:260%;aspect-ratio:1;margin:-130% 0 0 -130%;pointer-events:none}
+#psy{position:absolute;inset:0;border-radius:50%;background:conic-gradient(#ff2d95,#ffd02d,#2dff8f,#2dd0ff,#8f2dff,#ff2d95);-webkit-mask:radial-gradient(circle closest-side,#000 0,transparent 100%);mask:radial-gradient(circle closest-side,#000 0,transparent 100%);opacity:0;transition:opacity 1.5s;animation:spin 9s linear infinite}
+#psw.on #psy{opacity:.5}
+.rg{position:absolute;inset:0;border-radius:50%;border:3px solid #fff;opacity:0;animation:rg 3s ease-out infinite;animation-play-state:paused}
+#psw.on .rg{animation-play-state:running}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes rg{0%{transform:scale(.02);opacity:.9;border-color:#ff5ad2}50%{border-color:#5affd8}100%{transform:scale(.5);opacity:0;border-color:#8f5aff}}
+#pin{fill:#fff;opacity:.35;transition:.3s}#pin.on{opacity:1;filter:drop-shadow(0 0 10px #ff5ad2) drop-shadow(0 0 18px #5affd8)}
+</style>
+</head>
+<body>
+<button id="lg" class="g">EN</button>
+<h1 data-i="title"></h1>
+<div class="sub" data-i="sub"></div>
+<div id="stages"><div data-i="s1"></div><div data-i="s2"></div><div data-i="s3"></div><div data-i="s4"></div></div>
+<div id="tot"><div id="bar"></div></div><div id="tt"></div>
+
+<div id="stage">
+<svg id="body" viewBox="0 0 300 400" aria-hidden="true">
+<g fill="none" stroke="var(--ln)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+<circle cx="150" cy="70" r="28"/><path d="M140 96v22M160 96v22"/>
+<path d="M92 140Q150 118 208 140L216 262Q150 286 84 262Z"/>
+<path d="M92 140Q62 215 86 300M208 140Q238 215 214 300"/>
+<path d="M52 330Q110 285 175 320M248 330Q190 285 125 320M52 330Q150 384 248 330"/>
+<path d="M150 330V40" stroke-dasharray="3 6" opacity=".55"/>
+<path d="M174 109H252M220 233H252M180 328H252M50 68H122" stroke-dasharray="2 4" opacity=".5"/>
+</g>
+<ellipse class="z" id="z0" cx="150" cy="326" rx="30" ry="12" style="--c:#ff7a59"/>
+<ellipse class="z" id="z1" cx="150" cy="232" rx="42" ry="30" style="--c:#ffc247"/>
+<ellipse class="z" id="z2" cx="150" cy="109" rx="24" ry="10" style="--c:#5cc8ff"/>
+<circle id="dot" r="6" cx="150" cy="326"/>
+<circle id="pin" cx="150" cy="68" r="4"/>
+<text class="l" x="4" y="72" data-i="pin"></text>
+<text class="l" x="296" y="106" text-anchor="end" data-i="jal"></text>
+<text class="l" x="296" y="230" text-anchor="end" data-i="udd"></text>
+<text class="l" x="296" y="324" text-anchor="end" data-i="mul"></text>
+</svg>
+<div id="psw"><div id="psy"></div><i class="rg"></i><i class="rg" style="animation-delay:1s"></i><i class="rg" style="animation-delay:2s"></i></div>
+<div id="circle"></div>
+<div id="txt"><div id="ph">آماده</div><div id="ct"></div></div>
+</div>
+
+<div id="hint"></div>
+
+<div id="chips">
+<div class="chip" id="c0" style="--c:#ff7a59"><b data-i="bm"></b><small data-i="pm"></small><i id="s0">—</i></div>
+<div class="chip" id="c1" style="--c:#ffc247"><b data-i="bu"></b><small data-i="pu"></small><i id="s1">—</i></div>
+<div class="chip" id="c2" style="--c:#5cc8ff"><b data-i="bj"></b><small data-i="pj"></small><i id="s2">—</i></div>
+</div>
+
+<div id="set">
+<label><span data-i="cyc"></span> <select id="cy"><option>1</option><option>2</option><option>3</option></select></label>
+<label><span data-i="hold"></span> <select id="hd"><option value="10">۱۰ ثانیه</option><option value="15">۱۵ ثانیه</option><option value="20">۲۰ ثانیه</option></select></label>
+</div>
+
+<div id="btns">
+<button id="go"></button>
+<button id="skip" class="g" data-i="skip" hidden></button>
+<button id="stop" class="g" data-i="stop" hidden></button>
+</div>
+
+<p class="note" id="note"></p>
+
+<script>
+const $=s=>document.querySelector(s),fa=n=>lang!=='fa'?String(n):String(n).replace(/\d/g,d=>'۰۱۲۳۴۵۶۷۸۹'[d]);
+const store=(k,v)=>{try{if(v===undefined)return localStorage[k];localStorage[k]=v}catch(e){}};
+let lang=store('lang')||'fa',curB=[0,0,0],idle='h0';const t=k=>I[lang][k];
+$('#cy').value=store('cy')||'1';$('#hd').value=store('hd')||'15';
+$('#cy').onchange=e=>{store('cy',e.target.value);showTot()};$('#hd').onchange=e=>{store('hd',e.target.value);showTot()};
+const Z=[0,1,2].map(i=>[$('#z'+i),$('#c'+i),$('#s'+i)]),ST=[...document.querySelectorAll('#stages div')];
+const TXf={
+1:['دم عمیق و آهسته از بینی','بازدم آهسته؛ کف لگن ملایم'],
+2:['دم با سرعت متوسط از بینی','با هر بازدم، کف لگن ضربه (پالس مولا)'],
+3:['دم کوتاه از بینی','پمپ ناف با هر بازدم (پالس اودیانا)، لگن ملایم'],
+4:['دم از قاعدهٔ ستون فقرات تا تاج؛ کف لگن بالا','','حبس: مولا + اودیانا (سبک) + جالاندهارا. چانه به سمت سینه','بازدم آرام؛ اول چانه، بعد شکم و لگن را آزاد کن'],
+5:['تنفس آرام','بازدم بلند و آرام']};
+const TXe={
+1:['Slow deep inhale through the nose','Slow exhale; soft pelvic floor'],
+2:['Medium-speed nasal inhale','Pulse the pelvic floor (Mula) on each exhale'],
+3:['Short nasal inhale','Pump the navel on each exhale (Uddiyana pulse), soft Mula'],
+4:['Inhale from spine base to crown; lift the pelvic floor','','Hold: Mula + Uddiyana (light) + Jalandhara. Chin to chest','Exhale slowly; release chin first, then belly, then pelvic floor'],
+5:['Calm breath','Long, easy exhale']};
+const I={fa:{title:'Tri-Lock Breath',sub:'تنفس سه‌مرحله‌ای · سه باندا',s1:'۱ آهسته',s2:'۲ متوسط',s3:'۳ آتش',s4:'۴ دم نهایی و حبس',jal:'جالاندهارا',udd:'اودیانا',mul:'مولا',pin:'پینه‌آل',bm:'مولا بندا',pm:'کف لگن',bu:'اودیانا بندا',pu:'شکم',bj:'جالاندهارا بندا',pj:'چانه و گلو',cyc:'دور',hold:'حبس',sec:'ثانیه',go:'شروع',pa:'توقف موقت',re:'ادامه',skip:'پایان حبس',stop:'توقف',ready:'آماده',in:'دم',out:'بازدم',hl:'حبس',lv:['—','ملایم','پالس','قفل'],
+h0:'نشسته، گردن راحت. شروع را بزن.',h1:'متوقف شد. تنفس آرام و طبیعی.',h2:'پایان. چند نفس طبیعی بکش و تا رفع کامل سرگیجه بنشین.',
+note:'<b>ایمنی:</b> نشسته انجام بده، دور از آب و رانندگی. با اولین سرگیجهٔ شدید یا گزگز زیاد متوقف شو. صرع، بارداری، فشار خون یا بیماری قلبی، گلوکوم، سابقهٔ پنیک و آسم فعال: انجام نده. حبس را تا حد راحتی نگه دار. این برنامه فقط راهنمای ریتم تنفس و باندا است؛ ادعای فعال‌سازی پینه‌آل یا تولید DMT پشتوانهٔ علمی ندارد و افکت نورانی روی پینه‌آل فقط جلوهٔ تصویری است. اودیانای کامل سنتی روی ریه‌های خالی انجام می‌شود؛ اینجا در حبس فقط کشش سبک شکم مدنظر است.'},
+en:{title:'Tri-Lock Breath',sub:'Three-stage breath · Three bandhas',s1:'1 Slow',s2:'2 Medium',s3:'3 Fire',s4:'4 Final & hold',jal:'Jalandhara',udd:'Uddiyana',mul:'Mula',pin:'Pineal',bm:'Mula Bandha',pm:'Pelvic floor',bu:'Uddiyana Bandha',pu:'Abdomen',bj:'Jalandhara Bandha',pj:'Chin & throat',cyc:'Rounds',hold:'Hold',sec:'s',go:'Start',pa:'Pause',re:'Resume',skip:'End hold',stop:'Stop',ready:'Ready',in:'Inhale',out:'Exhale',hl:'Hold',lv:['—','Soft','Pulse','Lock'],
+h0:'Sit comfortably, neck relaxed. Press start.',h1:'Stopped. Breathe calmly and naturally.',h2:'Done. Take a few natural breaths and stay seated until any dizziness fully passes.',
+note:'<b>Safety:</b> Practice seated, away from water and never while driving. Stop at the first strong dizziness or heavy tingling. Do not practice with epilepsy, pregnancy, high blood pressure or heart disease, glaucoma, panic history or active asthma. Hold only as long as it is comfortable. This app only guides breathing rhythm and bandhas; claims about activating the pineal gland or producing DMT have no scientific support, and the glow at the pineal spot is a visual effect only. Full Uddiyana is traditionally done on empty lungs; during the hold here, only a light abdominal lift is meant.'}};
+function setB(B){curB=B;const all=B.every(v=>v===3);$('#psw').classList.toggle('on',all);$('#pin').classList.toggle('on',all);Z.forEach(([z,c,s],i)=>{const v=B[i];['on1','on2','on3'].forEach(k=>{z.classList.remove(k);c.classList.remove(k)});if(v){z.classList.add('on'+v);c.classList.add('on'+v)}s.textContent=t('lv')[v]})}
+function build(){
+ const L=[],cy=+$('#cy').value,hd=+$('#hd').value;let c=0;const A=o=>{o.c=c;L.push(o)};
+ const calm=n=>{for(let i=1;i<=n;i++){A({st:5,i,n,t:'in',d:4,a:.4,b:.8,B:[0,0,0]});A({st:5,i,n,t:'out',d:6,a:.8,b:.4,B:[0,0,0]})}};
+ for(c=1;c<=cy;c++){
+  for(let i=1;i<=10;i++){A({st:1,i,n:10,t:'in',d:3.5,a:.4,b:1,B:[0,0,0]});A({st:1,i,n:10,t:'out',d:3.5,a:1,b:.4,B:[1,0,0]})}
+  for(let i=1;i<=20;i++){A({st:2,i,n:20,t:'in',d:1.25,a:.5,b:.9,B:[0,0,0]});A({st:2,i,n:20,t:'out',d:1.25,a:.9,b:.5,B:[2,0,0]})}
+  for(let i=1;i<=30;i++){A({st:3,i,n:30,t:'in',d:.5,a:.62,b:.82,B:[1,0,0]});A({st:3,i,n:30,t:'out',d:.5,a:.82,b:.62,B:[1,2,0]})}
+  for(let k=0;k<3;k++)A({st:4,i:k+1,n:3,t:'in',d:3.5,a:[.4,.65,.85][k],b:[.65,.85,1][k],B:[3,0,0],r:[k/3,(k+1)/3]});
+  A({st:4,t:'hold',d:hd,a:1,b:1,B:[3,3,3],r:[1,1]});
+  A({st:4,t:'out',d:8,a:1,b:.4,B:[1,0,0]});
+  calm(c<cy?3:10);
+ }
+ let T=0;L.forEach(o=>{o.ts=T;T+=o.d});L.tot=T;
+ for(let i=0;i<L.length;){let j=i;while(j<L.length&&L[j].st===L[i].st&&L[j].c===L[i].c)j++;const a=L[i].ts,b=L[j-1].ts+L[j-1].d;for(let k=i;k<j;k++){L[k].g0=a;L[k].g1=b}i=j}
+ return L;
+}
+let L=[],ix=0,el=0,last=0,run=false,pause=false,ac=null,wl=null;
+const $c=$('#circle'),$dot=$('#dot');
+function tone(f,d){if(!ac)return;const o=ac.createOscillator(),g=ac.createGain();o.frequency.value=f;g.gain.value=.0001;o.connect(g);g.connect(ac.destination);
+ const n=ac.currentTime;g.gain.exponentialRampToValueAtTime(.12,n+.03);g.gain.exponentialRampToValueAtTime(.0001,n+d);o.start(n);o.stop(n+d+.05)}
+function labels(it){const T=(lang==='fa'?TXf:TXe)[it.st];$('#hint').textContent=it.t==='in'?T[0]:it.t==='out'?(it.st===4?T[3]:T[1]):T[2];$('#ph').textContent=t(it.t==='hold'?'hl':it.t);$('#ct').textContent=it.t==='hold'?'':fa(it.i)+' / '+fa(it.n)}
+function fmt(s){s=Math.floor(s);return fa(String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0'))}
+function prog(it){const n=it.ts+el;$('#bar').style.width=n/L.tot*100+'%';$('#tt').textContent=fmt(n)+' / '+fmt(L.tot);
+ ST.forEach((e,i)=>{const s=i+1;e.style.setProperty('--p',(it.st===5||s<it.st?100:s>it.st?0:(n-it.g0)/(it.g1-it.g0)*100)+'%')})}
+const goT=()=>{$('#go').textContent=t(!run?'go':pause?'re':'pa')};
+function showTot(){if(!run)$('#tt').textContent=fmt(0)+' / '+fmt(build().tot)}
+function setItem(){
+ const it=L[ix],p=L[ix-1];setB(it.B);
+ ST.forEach((e,i)=>e.classList.toggle('on',i+1===it.st));
+ labels(it);
+ if(!p||p.st!==it.st&&it.t==='in')tone(it.st===5?330:520,.5);
+ if(it.t==='hold')tone(660,.8);
+ if(p&&p.t==='hold')tone(440,.8);
+}
+function draw(it,p){
+ const e=(1-Math.cos(Math.PI*p))/2;let s=it.a+(it.b-it.a)*e;
+ if(it.t==='hold'){s=1+.012*Math.sin(el*3);$('#ct').textContent=fa(Math.ceil(it.d-el))}
+ $c.style.transform='scale('+s+')';
+ if(it.r){const r=it.r[0]+(it.r[1]-it.r[0])*e;$dot.setAttribute('cy',326-(326-34)*r);$dot.style.opacity=1}else $dot.style.opacity=0;
+ prog(it);
+}
+function frame(ts){
+ if(!run)return;requestAnimationFrame(frame);
+ const dt=Math.min((ts-last)/1000,.2);last=ts;if(pause)return;
+ el+=dt;let it=L[ix];
+ while(el>=it.d){el-=it.d;ix++;if(ix>=L.length)return done();it=L[ix];setItem()}
+ draw(it,el/it.d);$('#skip').hidden=!(it.t==='hold');
+}
+async function lock(){try{wl=await navigator.wakeLock.request('screen')}catch(e){}}
+function start(){
+ try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();ac.resume()}catch(e){}
+ L=build();ix=0;el=0;run=true;pause=false;lock();setItem();
+ $('#set').style.display='none';$('#stop').hidden=false;goT();
+ last=performance.now();requestAnimationFrame(frame);
+}
+function reset(k){idle=k;
+ run=false;try{wl&&wl.release()}catch(e){}
+ setB([0,0,0]);$c.style.transform='scale(.55)';$dot.style.opacity=0;ST.forEach(e=>{e.classList.remove('on');e.style.setProperty('--p','0%')});$('#bar').style.width='0';
+ $('#ph').textContent=t('ready');$('#ct').textContent='';$('#hint').textContent=t(k);
+ $('#set').style.display='flex';$('#stop').hidden=true;$('#skip').hidden=true;goT();showTot();
+}
+function done(){tone(520,1.2);reset('h2')}
+$('#go').onclick=()=>{if(!run)return start();pause=!pause;goT()};
+$('#stop').onclick=()=>reset('h1');
+$('#skip').onclick=()=>{el=L[ix].d};
+document.addEventListener('visibilitychange',()=>{if(run&&document.visibilityState==='visible')lock()});
+function applyLang(){const d=document.documentElement;d.lang=lang;d.dir=lang==='fa'?'rtl':'ltr';
+ document.querySelectorAll('[data-i]').forEach(e=>e.textContent=t(e.dataset.i));
+ $('#note').innerHTML=t('note');$('#lg').textContent=lang==='fa'?'EN':'فا';
+ [...$('#hd').options].forEach(o=>o.textContent=fa(o.value)+' '+t('sec'));
+ setB(curB);goT();
+ if(run)labels(L[ix]);else{$('#ph').textContent=t('ready');$('#hint').textContent=t(idle)}
+ showTot()}
+$('#lg').onclick=()=>{lang=lang==='fa'?'en':'fa';store('lang',lang);applyLang()};
+applyLang();
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js'));
+</script>
+</body>
+</html>
